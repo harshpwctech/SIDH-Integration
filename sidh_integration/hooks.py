@@ -241,4 +241,5 @@ app_license = "mit"
 # default_log_clearing_doctypes = {
 # 	"Logging DocType Name": 30  # days to retain logs
 # }
-
+# SIDH SSO
+sidh_sso = "sidh_integration.sidh_sso.handle_sidh_sso"

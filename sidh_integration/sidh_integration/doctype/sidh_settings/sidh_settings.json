@@ -1,0 +1,55 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-03-23 10:57:33.408715",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "crypto_key",
+  "crypto_iv",
+  "sso_url"
+ ],
+ "fields": [
+  {
+   "fieldname": "crypto_key",
+   "fieldtype": "Password",
+   "label": "Crypto Key"
+  },
+  {
+   "fieldname": "crypto_iv",
+   "fieldtype": "Password",
+   "label": "Crypto IV"
+  },
+  {
+   "fieldname": "sso_url",
+   "fieldtype": "Data",
+   "label": "SSO URL"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2026-03-23 10:58:23.125460",
+ "modified_by": "Administrator",
+ "module": "Sidh Integration",
+ "name": "SIDH Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
