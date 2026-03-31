@@ -66,7 +66,7 @@ def get_user_record(data: dict):
         "last_name"    : data.get("last_name", "").strip(),
         "email"        : email,
         "enabled"      : 1,
-        "new_password" : frappe.generate_hash(),   # mirrors core
+        "new_password" : frappe.generate_hash(), 
         "user_type"    : "Website User",
     })
     return user
