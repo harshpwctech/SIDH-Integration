@@ -143,6 +143,11 @@ required_apps = ["lms"]
 # 		"on_trash": "method"
 # 	}
 # }
+doc_events = {
+    "LMS Enrollment": {
+        "after_insert": "sidh_integration.sidh_sso.mark_sidh_enrollment"
+    }
+}
 
 # Scheduled Tasks
 # ---------------
@@ -241,4 +246,12 @@ required_apps = ["lms"]
 # 	"Logging DocType Name": 30  # days to retain logs
 # }
 # SIDH SSO
-sidh_sso = "sidh_integration.sidh_sso.handle_sidh_sso"
+fixtures = [
+    {
+        "dt": "Custom Field",
+        "filters": [
+            ["dt", "=", "LMS Enrollment"],
+            ["fieldname", "=", "is_sidh_enrollment"]
+        ]
+    }
+]

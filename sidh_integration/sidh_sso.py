@@ -38,12 +38,9 @@ def validate_payload(data):
         if not data.get(field):
             frappe.throw(f"Invalid token: missing field '{field}'")
 
-    if not frappe.db.exists("LMS Course", data.get("course_id")):
-        frappe.throw(f"Course '{data.get('course_id')}' does not exist")
-
     email = data.get("candidate_email")
     if email and "@" not in email:
-        frappe.throw("Invalid token: malformed email address")
+        frappe.throw("Invalid email address")
 
 
 def get_email(data):
@@ -66,20 +63,21 @@ def get_user_record(data: dict):
         "last_name"    : data.get("last_name", "").strip(),
         "email"        : email,
         "enabled"      : 1,
-        "new_password" : frappe.generate_hash(), 
+        "new_password" : frappe.generate_hash(),
         "user_type"    : "Website User",
     })
     return user
 
 
 def update_sidh_user(data: dict):
-    user = get_user_record(data)
+    user               = get_user_record(data)
     update_user_record = user.is_new()
 
     if not user.enabled:
         frappe.respond_as_web_page(
             _("Not Allowed"),
-            _("User {0} is disabled").format(user.email)
+            _("User {0} is disabled").format(user.email),
+            http_status_code=403
         )
         return False
 
@@ -94,28 +92,36 @@ def update_sidh_user(data: dict):
         user.flags.ignore_permissions = True
         user.flags.no_welcome_mail    = True
 
-        if default_role := frappe.db.get_single_value("Portal Settings", "default_role"):
+        if default_role := frappe.db.get_single_value(
+            "Portal Settings", "default_role"
+        ):
             user.add_roles(default_role)
 
-        user.save()                               
+        user.save()
+        frappe.db.commit()
+
+    return True
 
 
 def enroll_user_in_course(email, course_id):
-    if frappe.db.exists("LMS Enrollment", {"course": course_id, "member": email}):
+    if frappe.db.exists("LMS Enrollment", {
+        "course" : course_id,
+        "member" : email
+    }):
         return
     try:
         enrollment = frappe.get_doc({
-            "doctype"     : "LMS Enrollment",
-            "course"      : course_id,
-            "member"      : email,
-            "member_type" : "Student"
+            "doctype"            : "LMS Enrollment",
+            "course"             : course_id,
+            "member"             : email,
+            "member_type"        : "Student",
+            # "is_sidh_enrollment" : 1
         })
         enrollment.insert(ignore_permissions=True)
         frappe.db.commit()
     except Exception:
         frappe.log_error(frappe.get_traceback(), "SIDH SSO Enrollment Failed")
         frappe.throw("Enrollment failed")
-
 
 
 @frappe.whitelist(allow_guest=True)
@@ -135,13 +141,43 @@ def handle_sidh_sso():
 
     if update_sidh_user(data) is False:
         return
-    email = get_email(data)
 
-    course_id = data.get("course_id")
+    email        = get_email(data)
+    raw_course_id = data.get("course_id")
+
+    course_id = frappe.db.get_value("LMS Course", {"name": raw_course_id}, "name")
+    if not course_id:
+        frappe.throw(f"Course '{raw_course_id}' not found")
 
     frappe.local.login_manager.login_as(email)
-    frappe.db.commit()                             
+    frappe.db.commit()
 
-    enroll_user_in_course(email, course_id)
+    course = frappe.get_doc("LMS Course", course_id)
 
-    redirect_post_login(desk_user=False, redirect_to=f"/lms/courses/{course_id}")
+    if course.paid_course:
+        already_enrolled = frappe.db.exists(
+            "LMS Enrollment", {"course": course_id, "member": email}
+        )
+        if already_enrolled:
+            redirect_post_login(desk_user=False, redirect_to=f"/lms/courses/{course_id}")
+        else:
+            redirect_post_login(desk_user=False, redirect_to=f"/sidh_payment?course={course_id}")
+    else:
+        enroll_user_in_course(email, course_id)
+        redirect_post_login(desk_user=False, redirect_to=f"/lms/courses/{course_id}")
+
+def mark_sidh_enrollment(doc, method):
+    is_sidh_user = frappe.db.exists(
+        "User Social Login",
+        {
+            "parent"   : doc.member,
+            "provider" : "sidh"
+        }
+    )
+    if is_sidh_user:
+        frappe.db.set_value(
+            "LMS Enrollment",
+            doc.name,
+            "is_sidh_enrollment",
+            1
+        )

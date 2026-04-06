@@ -1,0 +1,82 @@
+{% extends "templates/web.html" %}
+
+{% block title %}Pay for {{ course.title }}{% endblock %}
+
+{% block page_content %}
+<div class="container" style="max-width: 500px; margin: 60px auto;">
+    <div class="card shadow-sm p-4">
+        <h3 class="mb-4">Complete Payment</h3>
+
+        <div class="mb-3">
+            <label class="text-muted">Course</label>
+            <p class="fw-bold">{{ course.title }}</p>
+        </div>
+
+        <div class="mb-3">
+            <label class="text-muted">Amount</label>
+            <p class="fw-bold">{{ currency }} {{ amount }}</p>
+        </div>
+
+        <div class="mb-3">
+            <label class="text-muted">Email</label>
+            <p>{{ email }}</p>
+        </div>
+
+        <div id="payment-error" class="alert alert-danger d-none"></div>
+
+        <button id="pay-btn" class="btn btn-primary w-100 mt-3">
+            Pay {{ currency }} {{ amount }}
+        </button>
+    </div>
+</div>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+    document.getElementById("pay-btn").onclick = function() {
+        var options = {
+            key         : "{{ razorpay_key }}",
+            amount      : "{{ amount_paise }}",
+            currency    : "{{ currency }}",
+            name        : "Skilldzire",
+            description : "{{ course.title }}",
+            order_id    : "{{ order_id }}",
+            prefill: {
+                email : "{{ email }}",
+                name  : "{{ full_name }}"
+            },
+            handler: function(response) {
+                fetch("/api/method/sidh_integration.www.sidh_payment.verify_payment", {
+                    method : "POST",
+                    headers: {
+                        "Content-Type"    : "application/json",
+                        "X-Frappe-CSRF-Token": frappe.csrf_token
+                    },
+                    body: JSON.stringify({
+                        razorpay_payment_id : response.razorpay_payment_id,
+                        razorpay_order_id   : response.razorpay_order_id,
+                        razorpay_signature  : response.razorpay_signature,
+                        course_id           : "{{ course_id }}"
+                    })
+                })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.message && data.message.status === "ok") {
+                        window.location.href = "/lms/courses/{{ course_id|lower }}";
+                    } else {
+                        document.getElementById("payment-error").classList.remove("d-none");
+                        document.getElementById("payment-error").innerText = "Payment verification failed. Please contact support.";
+                    }
+                });
+            },
+            modal: {
+                ondismiss: function() {
+                    document.getElementById("payment-error").classList.remove("d-none");
+                    document.getElementById("payment-error").innerText = "Payment cancelled.";
+                }
+            }
+        };
+        var rzp = new Razorpay(options);
+        rzp.open();
+    };
+</script>
+{% endblock %}
