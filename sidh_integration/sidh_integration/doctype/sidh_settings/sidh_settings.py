@@ -1,9 +1,10 @@
 # Copyright (c) 2026, Mytra and contributors
 # For license information, please see license.txt
 
-# import frappe
+import frappe
 from frappe.model.document import Document
 
 
 class SIDHSettings(Document):
-	pass
+	def validate(self):
+		return
