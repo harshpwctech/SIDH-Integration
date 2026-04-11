@@ -1,13 +1,12 @@
 app_name = "sidh_integration"
-app_title = "Sidh Integration"
+app_title = "SIDH Integration"
 app_publisher = "Mytra"
-app_description = "SIDH SSO Integration for Skilldzire"
-app_email = "shalini@mytra.money"
+app_description = "SIDH SSO Integration for Frappe LMS"
+app_email = "hello@mytra.money"
 app_license = "mit"
 
 # Apps
 # ------------------
-
 required_apps = ["lms"]
 # Each item in the list will be shown as an app in the apps page
 # add_to_apps_screen = [
@@ -145,7 +144,7 @@ required_apps = ["lms"]
 # }
 doc_events = {
     "LMS Enrollment": {
-        "after_insert": "sidh_integration.sidh_sso.mark_sidh_enrollment"
+        "on_change": "sidh_integration.doctype_events.lms_enrollment.on_change"
     }
 }
 
@@ -246,12 +245,3 @@ doc_events = {
 # 	"Logging DocType Name": 30  # days to retain logs
 # }
 # SIDH SSO
-fixtures = [
-    {
-        "dt": "Custom Field",
-        "filters": [
-            ["dt", "=", "LMS Enrollment"],
-            ["fieldname", "=", "is_sidh_enrollment"]
-        ]
-    }
-]
