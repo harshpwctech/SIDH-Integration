@@ -1,9 +1,9 @@
 [project]
 name = "sidh_integration"
 authors = [
-    { name = "Mytra", email = "shalini@mytra.money"}
+    { name = "Mytra", email = "hello@mytra.money"}
 ]
-description = "SIDH SSO Integration for Skilldzire"
+description = "SIDH SSO Integration for Frappe LMS"
 requires-python = ">=3.10"
 readme = "README.md"
 dynamic = ["version"]
