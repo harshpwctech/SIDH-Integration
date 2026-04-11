@@ -13,24 +13,29 @@
   {
    "fieldname": "sso_url",
    "fieldtype": "Data",
-   "label": "SSO URL"
+   "label": "SSO URL",
+   "read_only": 1
   },
   {
    "fieldname": "api_key",
    "fieldtype": "Password",
-   "label": "API Key"
+   "in_list_view": 1,
+   "label": "Client ID",
+   "reqd": 1
   },
   {
    "fieldname": "api_secret",
    "fieldtype": "Password",
-   "label": "API Secret"
+   "in_list_view": 1,
+   "label": "Client Secret",
+   "reqd": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2026-04-11 12:39:29.614430",
+ "modified": "2026-04-11 13:10:39.587479",
  "modified_by": "Administrator",
  "module": "Sidh Integration",
  "name": "SIDH Settings",
