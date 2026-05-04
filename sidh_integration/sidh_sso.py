@@ -26,8 +26,7 @@ def validate_token_data(token):
     data = decrypt_token(token, api_key, api_secret)
     if not data:
         return
-    print(data)
-    if (validate_token_expiry(data) and validate_payload(data)):
+    if not (validate_token_expiry(data) and validate_payload(data)):
         return
     user = get_email(data)
     if not user:

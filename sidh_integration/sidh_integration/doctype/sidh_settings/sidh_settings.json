@@ -5,8 +5,9 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "crypto_key",
-  "crypto_iv",
+  "base_url",
+  "api_key",
+  "api_secret",
   "sso_url"
  ],
  "fields": [
@@ -23,14 +24,35 @@
   {
    "fieldname": "sso_url",
    "fieldtype": "Data",
-   "label": "SSO URL"
+   "label": "SSO URL",
+   "read_only": 1
+  },
+  {
+   "fieldname": "api_key",
+   "fieldtype": "Password",
+   "in_list_view": 1,
+   "label": "Client ID",
+   "reqd": 1
+  },
+  {
+   "fieldname": "api_secret",
+   "fieldtype": "Password",
+   "in_list_view": 1,
+   "label": "Client Secret",
+   "reqd": 1
+  },
+  {
+   "fieldname": "base_url",
+   "fieldtype": "Data",
+   "label": "Base URL",
+   "reqd": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2026-03-23 10:58:23.125460",
+ "modified": "2026-05-04 13:38:22.504573",
  "modified_by": "Administrator",
  "module": "Sidh Integration",
  "name": "SIDH Settings",
