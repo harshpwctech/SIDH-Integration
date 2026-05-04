@@ -12,14 +12,17 @@
  ],
  "fields": [
   {
-   "fieldname": "crypto_key",
-   "fieldtype": "Password",
-   "label": "Crypto Key"
+   "fieldname": "sso_url",
+   "fieldtype": "Data",
+   "label": "SSO URL",
+   "read_only": 1
   },
   {
-   "fieldname": "crypto_iv",
+   "fieldname": "api_key",
    "fieldtype": "Password",
-   "label": "Crypto IV"
+   "in_list_view": 1,
+   "label": "Client ID",
+   "reqd": 1
   },
   {
    "fieldname": "sso_url",

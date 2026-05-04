@@ -23,7 +23,7 @@ def validate_token_data(token):
     settings = frappe.get_single("SIDH Settings")
     api_key = settings.get_password(fieldname="api_key", raise_exception=False)
     api_secret = settings.get_password(fieldname="api_secret",  raise_exception=False)
-    data = decrypt_token(token, api_key, api_secret)
+    data = decrypt_token(token, api_secret, api_key)
     if not data:
         return
     if not (validate_token_expiry(data) and validate_payload(data)):
@@ -85,7 +85,7 @@ def decrypt_token(token, crypto_key, crypto_iv):
         frappe.log_error(frappe.get_traceback(), "SIDH SSO Decryption Failed")
         frappe.respond_as_web_page(
             _("Error"),
-            _("Token Decryption Failes. Please contact Administrator."),
+            _("Token Decryption Failed. Please contact Administrator."),
             http_status_code=403
         )
         return
