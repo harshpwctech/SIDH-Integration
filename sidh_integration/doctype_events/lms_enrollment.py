@@ -16,7 +16,7 @@ def update_sidh_progress(doc):
     }
     data = {
         "CandidateId": get_candidate_id(doc.member),
-        "CourseId": doc.name,
+        "CourseId": doc.course,
         "CourseStatusEnum": 0,
         "CourseCompletionPercentage": doc.progress,
         "courseEnrollmentDate": doc.creation
