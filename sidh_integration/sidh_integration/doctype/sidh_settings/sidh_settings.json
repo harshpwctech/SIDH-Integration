@@ -19,20 +19,7 @@
   },
   {
    "fieldname": "api_key",
-   "fieldtype": "Password",
-   "in_list_view": 1,
-   "label": "Client ID",
-   "reqd": 1
-  },
-  {
-   "fieldname": "sso_url",
    "fieldtype": "Data",
-   "label": "SSO URL",
-   "read_only": 1
-  },
-  {
-   "fieldname": "api_key",
-   "fieldtype": "Password",
    "in_list_view": 1,
    "label": "Client ID",
    "reqd": 1

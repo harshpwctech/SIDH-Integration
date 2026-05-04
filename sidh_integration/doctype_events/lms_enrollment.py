@@ -32,8 +32,8 @@ def update_sidh_progress(doc):
     try:
         resp = make_post_request(update_progress_url, data=frappe.as_json(data), headers=headers)
         integration_request.update_status(resp, "Completed")
-    except Exception:
-        frappe.log_error()
+    except Exception as exc:
+        integration_request.update_status(exc, "Failed")
 
 def get_candidate_id(member):
     user = frappe.get_doc("User", member)
