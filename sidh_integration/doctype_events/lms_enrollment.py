@@ -11,8 +11,8 @@ def update_sidh_progress(doc):
     update_progress_url = sidh_settings.base_url + "api/webhook-public/update/user-course-data"
     headers = {
         "Content-Type": "application/json",
-        "client-id": sidh_settings.api_key,
-        "client-secret": sidh_settings.get_password("api_secret", raise_exception=False)
+        "client_id": sidh_settings.api_key,
+        "client_secret": sidh_settings.get_password("api_secret", raise_exception=False)
     }
     data = {
         "CandidateId": get_candidate_id(doc.member),
