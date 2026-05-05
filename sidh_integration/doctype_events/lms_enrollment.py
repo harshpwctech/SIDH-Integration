@@ -15,12 +15,32 @@ def update_sidh_progress(doc):
         "client_secret": sidh_settings.get_password("api_secret", raise_exception=False)
     }
     data = {
+        "CourseStatusEnum": 0,
         "CandidateId": get_candidate_id(doc.member),
         "CourseId": doc.course,
-        "CourseStatusEnum": 0,
+        "CertificationUrl": "",
+        "IsFavorite": "",
         "CourseCompletionPercentage": doc.progress,
-        "courseEnrollmentDate": doc.creation
+        "CourseEnrollmentDate": doc.creation,
+        "CourseCompletionDate": "",
+        "Paid": "",
+        "Amount": 0,
+        "TransId": "",
+        "CertificationStatus": "",
+        "CertificationIssueDate": "",
+        "CertificationType": "",
+        "CertificationPercentage": 0,
+        "AssessmentTaken": "",
+        "AssessmentDate": "",
+        "AssessmentNumberQuestion": 0,
+        "AssessmentNumberAnswer": 0,
+        "AssessmentNumberCorrect": 0,
+        "AssessmentPercentage": 0,
+        "Review": "",
+        "Rating": 0,
+        "PrevRating": 0
     }
+
     if doc.progress > 0:
         data["CourseStatusEnum"] = 1
     if doc.progress == 100:
