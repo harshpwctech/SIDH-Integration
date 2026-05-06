@@ -21,7 +21,7 @@ def update_sidh_progress(doc):
         "CertificationUrl": "",
         "IsFavorite": "",
         "CourseCompletionPercentage": doc.progress,
-        "CourseEnrollmentDate": doc.creation,
+        "CourseEnrollmentDate": "", #doc.creation
         "CourseCompletionDate": "",
         "Paid": "",
         "Amount": 0,
@@ -53,7 +53,8 @@ def update_sidh_progress(doc):
         resp = make_post_request(update_progress_url, data=frappe.as_json(data), headers=headers)
         integration_request.update_status(resp, "Completed")
     except Exception as exc:
-        integration_request.update_status(exc, "Failed")
+        response_data = (exc.response.json() if exc.response else str(exc))
+        integration_request.update_status(response_data, "Failed")
 
 def get_candidate_id(member):
     user = frappe.get_doc("User", member)
